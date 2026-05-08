@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reaksiya Testi</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;font-family:system-ui,sans-serif}
+  body{background:linear-gradient(135deg,#0f172a,#1e293b);color:#fff;min-height:100vh;display:flex;justify-content:center;align-items:center}
+  .card{background:rgba(255,255,255,.1);backdrop-filter:blur(12px);padding:22px;border-radius:18px;text-align:center;max-width:340px;width:90%;border:1px solid rgba(255,255,255,.15);box-shadow:0 10px 25px rgba(0,0,0,.4)}
+  h2{margin-bottom:12px;font-size:19px}
+  .box{height:130px;border-radius:12px;display:flex;justify-content:center;align-items:center;font-size:22px;font-weight:600;cursor:pointer;transition:background .15s,transform .1s;user-select:none;margin:10px 0}
+  .box:active{transform:scale(0.97)}
+  .wait{background:#ef4444}.go{background:#22c55e}.result{background:#3b82f6}
+  .stats{display:flex;justify-content:space-around;margin:10px 0;font-size:13px;color:#94a3b8}
+  .btn{background:rgba(255,255,255,.15);color:#fff;border:none;padding:8px 16px;border-radius:8px;cursor:pointer;font-weight:500;transition:.2s}
+  .btn:hover{background:rgba(255,255,255,.25)}
+</style>
+</head>
+<body>
+<div class="card">
+  <h2>🎯 Reaksiya Testi</h2>
+  <div class="box wait" id="box">Kuting...</div>
+  <div class="stats">
+    <span>O'rtacha: <b id="avg">—</b></span>
+    <span>Eng tez: <b id="best">—</b></span>
+    <span>Urinish: <b id="cnt">0</b></span>
+  </div>
+  <button class="btn" onclick="clearStats()">🗑️ Tozalash</button>
+</div>
+<script>
+  let state='wait',tm,st,res=[];
+  const box=document.getElementById('box'),avg=document.getElementById('avg'),best=document.getElementById('best'),cnt=document.getElementById('cnt');
+  function reset(){clearTimeout(tm);state='wait';box.className='box wait';box.textContent='Kuting...'}
+  function start(){reset();tm=setTimeout(()=>{state='go';box.className='box go';box.textContent='Bosing!';st=Date.now()},1000+Math.random()*3000)}
+  function click(){
+    if(state==='wait'){reset();start();return}
+    if(state==='go'){state='result';const t=Date.now()-st;res.push(t);box.className='box result';box.textContent=t+' ms';upd();setTimeout(reset,1200);return}
+    if(state==='result'){reset();start()}
+  }
+  box.onclick=click;
+  function upd(){const a=res.reduce((s,v)=>s+v,0)/res.length;avg.textContent=Math.round(a)+' ms';best.textContent=Math.min(...res)+' ms';cnt.textContent=res.length}
+  function clearStats(){res=[];avg.textContent=best.textContent='—';cnt.textContent=0;reset()}
+  start();
+</script>
+</body>
+</html>
